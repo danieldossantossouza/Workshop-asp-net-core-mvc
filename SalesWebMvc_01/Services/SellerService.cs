@@ -15,13 +15,15 @@ namespace SalesWebMvc_01.Services
 			_context = contexte;
 		}
 
-
 		public List<Seller> FindAll()
 		{
-
 			return _context.Seller.ToList(); //Operação Síncrona
-
 		}
 
+		public void Insert(Seller obj)
+		{
+			_context.Add(obj);
+			_context.SaveChanges();
+		}
 	}
 }
