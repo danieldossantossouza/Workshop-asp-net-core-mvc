@@ -25,6 +25,8 @@ namespace SalesWebMvc_01.Controllers
         public IActionResult Index()
         {
 			var list = _sellerService.FindAll();
+
+
             return View(list);
         }
 
