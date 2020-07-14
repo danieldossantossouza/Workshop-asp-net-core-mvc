@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -52,14 +53,14 @@ namespace SalesWebMvc_01.Controllers
 		{
 			if (id == null)
 			{
-				return NotFound();
+				return RedirectToAction(nameof(Error), new { message = "Id não Reconhecido ! " });
 			}
 
 			var obj = _sellerService.FindById(id.Value);
 
 			if (obj == null)
 			{
-				return NotFound();
+				return RedirectToAction(nameof(Error), new { message = "Id não Encontrado ! " });
 			}
 			return View(obj);
 		}
@@ -76,14 +77,14 @@ namespace SalesWebMvc_01.Controllers
 		{
 			if (id == null)
 			{
-				return NotFound();
+				return RedirectToAction(nameof(Error), new { message = "Id não Reconhecido ! " });
 			}
 
 			var obj = _sellerService.FindById(id.Value);
 
 			if (obj == null)
 			{
-				return NotFound();
+				return RedirectToAction(nameof(Error), new { message = "Id não Encontrado ! " });
 			}
 			return View(obj);
 		}
@@ -92,12 +93,12 @@ namespace SalesWebMvc_01.Controllers
 		{
 			if (id == null)
 			{
-				return NotFound();
+			  return RedirectToAction(nameof(Error), new { message = "Id não Reconhecido ! " });
 			}
 			var obj = _sellerService.FindById(id.Value);
 			if (obj == null)
 			{
-				return NotFound();
+				return RedirectToAction(nameof(Error), new { message = "Id não Encontrado ! " });
 			}
 			List<Department> departments = _departmentService.FindAll();
 			SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments};
@@ -111,22 +112,31 @@ namespace SalesWebMvc_01.Controllers
 		{
 			if (id != seller.Id)
 			{
-				return BadRequest();
+				return RedirectToAction(nameof(Error), new { message = "Id não Corresponde ! " });
 			}
 			try
 			{
 				_sellerService.Upddate(seller);
 				return RedirectToAction(nameof(Index));
 			}
-			catch (NotFoundException)
+			catch (ApplicationException e)
 			{
-				return NotFound();
+				return RedirectToAction(nameof(Error), new { message = e.Message });
 			}
 
-			catch (DbConcurrencyExeception)
-			{
-				return BadRequest();
-			}
 		}
+
+		public IActionResult Error(string message)
+		{
+			var viewModel = new ErrorViewModel
+			{
+				Message = message,
+
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+			};
+			return View(viewModel);
+		}
+
+
 	}
 }
