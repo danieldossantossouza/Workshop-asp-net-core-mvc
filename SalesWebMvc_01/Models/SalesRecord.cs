@@ -1,6 +1,6 @@
 ﻿using SalesWebMvc_01.Models.Enums;
 using System;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace SalesWebMvc_01.Models
 {
@@ -8,8 +8,10 @@ namespace SalesWebMvc_01.Models
 	{
 		public int Id { get; set; }
 
+		[DisplayFormat(DataFormatString ="{0:dd/MM/yyyy}")]
 		public DateTime Date { get; set; }
 
+		[DisplayFormat(DataFormatString ="{0:F2}")]
 		public double Amount { get; set; }
 
 		public SaleStatus Status { get; set; }
